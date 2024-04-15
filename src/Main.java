@@ -1,37 +1,38 @@
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        public void menu() {
-            Scanner scn = new Scanner(System.in);
-            System.out.println("""
-                    ----- Menu -----
-                    Please choose one option by entering the respective number.
-                    
-                    0: Exit Programm
-                    1: Overview Parking Spots
-                    2: Park a new Vehicle
-                    3: Unpark a Vehicle
-                    
-                    """);
+        // Create parking spots and decks
+        List<ParkingDeck> decks = new ArrayList<>();
 
-            String menuInput = scn.nextInt();
+        // Example: Create two decks
+        ParkingDeck deck1 = new ParkingDeck(1);
+        ParkingDeck deck2 = new ParkingDeck(2);
 
-            switch (menuInput) {
-                case 0:
-                    System.out.println("Exiting program...");
-                    System.exit(0);
-                    break;
-                case 1:
-                    SpotTracking.overview();
-                    break;
-                case 2:
-                    Parking.parkingVehicle();
-                    break;
-                case 3:
-                    Unparking.unparkingVehicle();
-                    break;
-            }
+        // Add spots to deck 1
+        for (int i = 1; i <= 10; i++) {
+            deck1.addSpot(new ParkingSpot(i, 1));
+        }
+
+        // Add spots to deck 2
+        for (int i = 11; i <= 20; i++) {
+            deck2.addSpot(new ParkingSpot(i, 2));
+        }
+
+        // Add decks to the list
+        decks.add(deck1);
+        decks.add(deck2);
+
+        // Initialize the ParkingManager with these decks
+        ParkingManager parkingManager = new ParkingManager(decks);
+
+        // Initialize the UIHandler with the ParkingManager
+        UIHandler uiHandler = new UIHandler(parkingManager);
+
+        // Start the menu system
+        while (true) {
+            uiHandler.menu();
         }
     }
 }
