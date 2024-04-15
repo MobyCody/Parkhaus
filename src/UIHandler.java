@@ -32,12 +32,16 @@ public class UIHandler {
             case 1:
                 System.out.println("Please enter your vehicle's license plate:");
                 String plate = scanner.next();
-                Vehicle vehicle = new Vehicle(plate); // Assuming Vehicle has a constructor that takes a license plate.
-                ParkingSpot spot = parkingManager.parkVehicle(vehicle);
-                if (spot != null) {
-                    System.out.println("Your vehicle has been parked in Spot " + spot.getSpotNumber() + " on Deck " + spot.getDeckNumber());
+                Vehicle vehicle = new Vehicle(plate);
+                if (parkingManager.findVehicleSpot(plate) == null) { //check if vehicle is already in map
+                    ParkingSpot spot = parkingManager.parkVehicle(vehicle);
+                    if (spot != null) {
+                        System.out.println("Your vehicle has been parked in Spot " + spot.getSpotNumber() + " on Deck " + spot.getDeckNumber());
+                    } else {
+                        System.out.println("Sorry, no spots available.");
+                    }
                 } else {
-                    System.out.println("Sorry, no spots available.");
+                    System.out.println("This vehicle is already parked.");
                 }
                 break;
             case 2:
@@ -62,7 +66,6 @@ public class UIHandler {
         }
     }
 
-    // Optionally, add a method to close the scanner when done
     public void closeScanner() {
         scanner.close();
     }

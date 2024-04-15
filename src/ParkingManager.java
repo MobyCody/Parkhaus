@@ -27,7 +27,7 @@ public class ParkingManager {
         ParkingSpot freeSpot = findParkingSpot();
         if (freeSpot != null) {
             freeSpot.setOccupied(true);
-            vehicleToSpotMap.put(vehicle, freeSpot); // Track the vehicle
+            vehicleToSpotMap.put(vehicle, freeSpot); //track vehicle
             return freeSpot;
         }
         return null;
@@ -64,6 +64,6 @@ public class ParkingManager {
                 return entry.getValue();
             }
         }
-        return null; // Return null if no vehicle with that license plate is found
+        return null; //return null if no vehicle with that license plate is found
     }
 }

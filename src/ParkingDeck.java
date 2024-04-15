@@ -8,7 +8,7 @@ public class ParkingDeck {
 
     public ParkingDeck(int deckNumber) {
         this.deckNumber = deckNumber;
-        this.spots = new ArrayList<>(); // Initialize the list here
+        this.spots = new ArrayList<>();
     }
 
     public void addSpot(ParkingSpot spot) {
@@ -23,7 +23,6 @@ public class ParkingDeck {
         return deckNumber;
     }
 
-    // Consider if setting the deck number post-creation is necessary; if not, remove this method
     public void setDeckNumber(int deckNumber) {
         this.deckNumber = deckNumber;
     }
