@@ -12,23 +12,20 @@ public class ParkingSpot {
     public int getSpotNumber() {
         return spotNumber;
     }
-
-    public void setSpotNumber(int spotNumber) {
+    public void setSpotNumber(int spotNumber) { //probably not needed
         this.spotNumber = spotNumber;
     }
 
     public int getDeckNumber() {
         return deckNumber;
     }
-
-    public void setDeckNumber(int deckNumber) {
+    public void setDeckNumber(int deckNumber) { //probably not needed
         this.deckNumber = deckNumber;
     }
 
     public boolean isOccupied() {
         return occupied;
     }
-
     public void setOccupied(boolean occupied) {
         this.occupied = occupied;
     }

@@ -3,30 +3,26 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        // Create parking spots and decks
+        ConfigManager configManager = new ConfigManager();
+
+        int numberOfDecks = configManager.getIntProperty("numberOfDecks");
+        int spotsPerDeck = configManager.getIntProperty("spotsPerDeck");
+        boolean twoBikesPerSpot = configManager.getBooleanProperty("twoBikesPerSpot"); //not used yet
+
+        //create parking spots and decks
         List<ParkingDeck> decks = new ArrayList<>();
 
-        // Example: Create two decks
-        ParkingDeck deck1 = new ParkingDeck(1);
-        ParkingDeck deck2 = new ParkingDeck(2);
-
-        // Add spots to deck 1
-        for (int i = 1; i <= 10; i++) {
-            deck1.addSpot(new ParkingSpot(i, 1));
+        //add decks according to config
+        for (int i = 1; i <= numberOfDecks; i++) {
+            ParkingDeck deck = new ParkingDeck(i);
+            for (int j = 1; j <= spotsPerDeck; j++) {
+                deck.addSpot(new ParkingSpot(j, i));
+            }
+            decks.add(deck);
         }
-
-        // Add spots to deck 2
-        for (int i = 11; i <= 20; i++) {
-            deck2.addSpot(new ParkingSpot(i, 2));
-        }
-
-        // Add decks to the list
-        decks.add(deck1);
-        decks.add(deck2);
 
         // Initialize the ParkingManager with these decks
         ParkingManager parkingManager = new ParkingManager(decks);
-
         // Initialize the UIHandler with the ParkingManager
         UIHandler uiHandler = new UIHandler(parkingManager);
 
