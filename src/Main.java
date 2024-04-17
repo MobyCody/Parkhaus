@@ -3,11 +3,11 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        ConfigManager configManager = new ConfigManager();
+        ConfigManager.getInstance(); // makes sure properties are loaded
 
-        int numberOfDecks = configManager.getIntProperty("numberOfDecks");
-        int spotsPerDeck = configManager.getIntProperty("spotsPerDeck");
-        boolean twoBikesPerSpot = configManager.getBooleanProperty("twoBikesPerSpot"); //not used yet
+        int numberOfDecks = ConfigManager.getIntProperty("numberOfDecks");
+        int spotsPerDeck = ConfigManager.getIntProperty("spotsPerDeck");
+//        boolean twoBikesPerSpot = ConfigManager.getBooleanProperty("twoBikesPerSpot"); //not used yet
 
         //create parking spots and decks
         List<ParkingDeck> decks = new ArrayList<>();

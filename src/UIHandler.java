@@ -1,11 +1,11 @@
 import java.util.Scanner;
 
 public class UIHandler {
-    private ParkingManager parkingManager;
-    private Scanner scanner;
+    private static ParkingManager parkingManager;
+    private final Scanner scanner;
 
     public UIHandler(ParkingManager parkingManager) {
-        this.parkingManager = parkingManager;
+        UIHandler.parkingManager = parkingManager;
         this.scanner = new Scanner(System.in);
     }
 
@@ -42,7 +42,7 @@ public class UIHandler {
                 System.out.println("Please enter your vehicle's license plate:");
                 String plate = scanner.next();
                 Vehicle vehicle = new Vehicle(plate);
-                if (parkingManager.findVehicleSpot(plate) == null) { //check if vehicle is already in map
+                if (parkingManager.findVehicle(plate) == null) { //check if vehicle is already in map
                     ParkingSpot spot = parkingManager.parkVehicle(vehicle);
                     if (spot != null) {
                         System.out.println("Your vehicle has been parked in Spot " + spot.getSpotNumber() +
@@ -60,7 +60,7 @@ public class UIHandler {
             case 2:
                 System.out.println("Please enter your vehicle's license plate to find it:");
                 String findPlate = scanner.next();
-                ParkingSpot foundSpot = parkingManager.findVehicleSpot(findPlate);
+                ParkingSpot foundSpot = parkingManager.findVehicle(findPlate);
                 if (foundSpot != null) {
                     System.out.println("Your vehicle is located at: Deck " + foundSpot.getDeckNumber() +
                             " in Spot " + foundSpot.getSpotNumber());
@@ -87,7 +87,7 @@ public class UIHandler {
         }
     }
 
-    public void closeScanner() {
-        scanner.close();
-    }
+//    public void closeScanner() {
+//        scanner.close();
+//    }
 }

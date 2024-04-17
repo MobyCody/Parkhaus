@@ -4,14 +4,26 @@ import java.io.IOException;
 
 
 public class ConfigManager {
-    private static Properties configProperties; //create new properties object
+    private static Properties configProperties  = new Properties(); //create new properties object
+    private static ConfigManager instance;
 
-    public ConfigManager() {
+    private ConfigManager() {
         loadProperties(); //call method  to load properties
     }
 
+    //check for instance of ConfigManager class, if not present, return instance
+    public static ConfigManager getInstance() {
+        if (instance == null) {
+            synchronized (ConfigManager.class) {
+                if (instance == null) {
+                    instance = new ConfigManager();
+                }
+            }
+        }
+        return instance;
+    }
+
     private void loadProperties() { //method loading properties from file config.propeties
-        configProperties = new Properties();
         try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
             if (input == null) {
                 System.out.println("No config file present!");
@@ -19,7 +31,7 @@ public class ConfigManager {
             }
             configProperties.load(input);
         } catch (IOException ex) {
-            ex.printStackTrace(); //what does this do?
+            System.err.println("Failed to load properties: " + ex.getMessage());
         }
     }
 

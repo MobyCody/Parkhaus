@@ -67,7 +67,7 @@ public class ParkingManager {
         return false; //return false if no spot was found or the spot was not occupied
     }
 
-    public ParkingSpot findVehicleSpot(String licensePlate) {
+    public ParkingSpot findVehicle(String licensePlate) {
         for (Map.Entry<Vehicle, ParkingSpot> entry : vehicleToSpotMap.entrySet()) {
             if (entry.getKey().getLicensePlate().equals(licensePlate)) {
                 return entry.getValue();
