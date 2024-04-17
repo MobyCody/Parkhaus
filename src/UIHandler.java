@@ -26,6 +26,7 @@ public class UIHandler {
                     1: Park my Vehicle
                     2: Find my Vehicle
                     3: Check out
+                    4: Count free spots
                     
                     """);
 
@@ -34,9 +35,9 @@ public class UIHandler {
 
         switch (menuInput) {
             case 0:
-            System.out.println("Exiting program...");
-            System.exit(0);
-            break;
+                System.out.println("Exiting program...");
+                System.exit(0);
+                break;
             case 1:
                 System.out.println("Please enter your vehicle's license plate:");
                 String plate = scanner.next();
@@ -80,6 +81,9 @@ public class UIHandler {
                     pressEnter();
                 }
                 break;
+            case 4:
+                System.out.println("There are " + parkingManager.freeSpots() + " free parking spots.");
+                pressEnter();
         }
     }
 

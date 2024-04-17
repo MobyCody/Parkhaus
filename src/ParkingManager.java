@@ -6,6 +6,13 @@ public class ParkingManager {
 
     private List<ParkingDeck> decks;
     private Map<Vehicle, ParkingSpot> vehicleToSpotMap; //track parked vehicles
+    private final int freeSpots = ConfigManager.getIntProperty("numberOfDecks") * ConfigManager.getIntProperty("spotsPerDeck");
+    private int parkedVehicles;
+
+    //method returning free spots
+    public int freeSpots() {
+        return (freeSpots - parkedVehicles);
+    }
 
     public ParkingManager(List<ParkingDeck> decks) {
         this.decks = decks;
@@ -28,6 +35,7 @@ public class ParkingManager {
         if (freeSpot != null) {
             freeSpot.setOccupied(true);
             vehicleToSpotMap.put(vehicle, freeSpot); //track vehicle
+            parkedVehicles++; //increment counter for parked vehicle tracking
             return freeSpot;
         }
         return null;
@@ -38,6 +46,7 @@ public class ParkingManager {
         if (spot != null && spot.isOccupied()) {
             spot.setOccupied(false);
             vehicleToSpotMap.remove(vehicle); //remove vehicle from map
+            parkedVehicles--; //decrement counter for parked vehicle tracking
             return true;
         }
         return false;

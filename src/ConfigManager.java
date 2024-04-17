@@ -4,7 +4,7 @@ import java.io.IOException;
 
 
 public class ConfigManager {
-    private Properties configProperties; //create new properties object
+    private static Properties configProperties; //create new properties object
 
     public ConfigManager() {
         loadProperties(); //call method  to load properties
@@ -24,10 +24,10 @@ public class ConfigManager {
     }
 
     //two getters that access configProperties and parse them into their respective data types
-    public int getIntProperty(String key) {
+    public static int getIntProperty(String key) {
         return Integer.parseInt(configProperties.getProperty(key));
     }
-    public boolean getBooleanProperty(String key) {
+    public static boolean getBooleanProperty(String key) {
         return Boolean.parseBoolean(configProperties.getProperty(key));
     }
 }
