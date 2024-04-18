@@ -1,5 +1,5 @@
 public class Vehicle {
-    private String licensePlate;
+    private final String licensePlate;
 
     public Vehicle(String licensePlate) {
         this.licensePlate = licensePlate;

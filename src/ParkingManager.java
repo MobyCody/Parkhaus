@@ -4,7 +4,7 @@ import java.util.Map;
 
 public class ParkingManager {
 
-    private List<ParkingDeck> decks;
+    private final List<ParkingDeck> decks;
     private Map<Vehicle, ParkingSpot> vehicleToSpotMap; //track parked vehicles
     private final int freeSpots = ConfigManager.getIntProperty("numberOfDecks") * ConfigManager.getIntProperty("spotsPerDeck");
     private int parkedVehicles;
@@ -28,17 +28,6 @@ public class ParkingManager {
             }
         }
         return null; //returns null if no free spots are available
-    }
-
-    public ParkingSpot parkVehicle(Vehicle vehicle) {
-        ParkingSpot freeSpot = findParkingSpot();
-        if (freeSpot != null) {
-            freeSpot.setOccupied(true);
-            vehicleToSpotMap.put(vehicle, freeSpot); //track vehicle
-            parkedVehicles++; //increment counter for parked vehicle tracking
-            return freeSpot;
-        }
-        return null;
     }
 
     public boolean unparkVehicle(Vehicle vehicle) {
@@ -65,6 +54,17 @@ public class ParkingManager {
             }
         }
         return false; //return false if no spot was found or the spot was not occupied
+    }
+
+    public ParkingSpot parkVehicle(Vehicle vehicle) {
+        ParkingSpot freeSpot = findParkingSpot();
+        if (freeSpot != null) {
+            freeSpot.setOccupied(true);
+            vehicleToSpotMap.put(vehicle, freeSpot); //track vehicle
+            parkedVehicles++; //increment counter for parked vehicle tracking
+            return freeSpot;
+        }
+        return null;
     }
 
     public ParkingSpot findVehicle(String licensePlate) {

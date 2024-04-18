@@ -1,10 +1,12 @@
 import java.util.Properties;
-import java.io.InputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
 public class ConfigManager {
-    private static Properties configProperties  = new Properties(); //create new properties object
+    private static final String CONFIG_FILE_PATH = "config.properties";
+    private static final Properties configProperties  = new Properties(); //create new properties object
     private static ConfigManager instance;
 
     private ConfigManager() {
@@ -24,14 +26,10 @@ public class ConfigManager {
     }
 
     private void loadProperties() { //method loading properties from file config.propeties
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
-            if (input == null) {
-                System.out.println("No config file present!");
-                return;
-            }
+        try (InputStream input = new FileInputStream(CONFIG_FILE_PATH)) {
             configProperties.load(input);
         } catch (IOException ex) {
-            System.err.println("Failed to load properties: " + ex.getMessage());
+            System.err.println("Failed to load configuration file: " + ex.getMessage());
         }
     }
 
@@ -41,5 +39,14 @@ public class ConfigManager {
     }
     public static boolean getBooleanProperty(String key) {
         return Boolean.parseBoolean(configProperties.getProperty(key));
+    }
+
+    //method to set properties
+    public static void setProperty(String key, String value) {
+        try (OutputStream output = new FileOutputStream(CONFIG_FILE_PATH)) {
+            configProperties.store(output, "Updated configuration");
+        } catch (IOException ex) {
+            System.err.println("Failed to save configuration: " + ex.getMessage());
+        }
     }
 }

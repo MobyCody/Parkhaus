@@ -15,6 +15,7 @@ public class UIHandler {
         scanner.nextLine();
     }
 
+    //TODO: INCLUDE SETTING PROPERTIES! USE ConfigManager configManager = ConfigManager.getInstance(); configManager.setProperty("numberOfDecks"); -> Key Value Pairs
     public void menu() {
         System.out.println("""
                     
