@@ -28,6 +28,7 @@ public class UIHandler {
                     2: Find my Vehicle
                     3: Check out
                     4: Count free spots
+                    5: Enter Setup
                     
                     """);
 
@@ -85,6 +86,13 @@ public class UIHandler {
             case 4:
                 System.out.println("There are " + parkingManager.freeSpots() + " free parking spots.");
                 pressEnter();
+            case 5:
+                System.out.println("How many decks does the garage have?");
+                String decks = scanner.nextLine();
+                System.out.println("How many spots per deck?");
+                String spots = scanner.nextLine();
+                ConfigManager.setProperty("numberOfDecks", decks);
+                ConfigManager.setProperty("spotsPerDeck", spots);
         }
     }
 

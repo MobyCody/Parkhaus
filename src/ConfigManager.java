@@ -25,7 +25,7 @@ public class ConfigManager {
         return instance;
     }
 
-    private void loadProperties() { //method loading properties from file config.propeties
+    private void loadProperties() { //method loading properties from file config.properties
         try (InputStream input = new FileInputStream(CONFIG_FILE_PATH)) {
             configProperties.load(input);
         } catch (IOException ex) {
