@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 public class UIHandler {
+    private static UIHandler instance;
     private static ParkingManager parkingManager;
     private final Scanner scanner;
 
@@ -9,13 +10,23 @@ public class UIHandler {
         this.scanner = new Scanner(System.in);
     }
 
+    public static UIHandler getInstance(ParkingManager parkingManager) {
+        if (instance == null) {
+            synchronized (UIHandler.class) {
+                if (instance == null) {
+                    instance = new UIHandler(parkingManager);
+                }
+            }
+        }
+        return instance;
+    }
+
     private void pressEnter() {
-        scanner.nextLine();
         System.out.println("Press Enter key to continue...");
+        scanner.nextLine();
         scanner.nextLine();
     }
 
-    //TODO: INCLUDE SETTING PROPERTIES! USE ConfigManager configManager = ConfigManager.getInstance(); configManager.setProperty("numberOfDecks"); -> Key Value Pairs
     public void menu() {
         System.out.println("""
                     
@@ -86,13 +97,16 @@ public class UIHandler {
             case 4:
                 System.out.println("There are " + parkingManager.freeSpots() + " free parking spots.");
                 pressEnter();
+                break;
             case 5:
+                scanner.nextLine();
                 System.out.println("How many decks does the garage have?");
                 String decks = scanner.nextLine();
+                ConfigManager.getInstance().setProperty("numberOfDecks", decks);
                 System.out.println("How many spots per deck?");
                 String spots = scanner.nextLine();
-                ConfigManager.setProperty("numberOfDecks", decks);
-                ConfigManager.setProperty("spotsPerDeck", spots);
+                ConfigManager.getInstance().setProperty("spotsPerDeck", spots);
+                break;
         }
     }
 

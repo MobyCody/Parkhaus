@@ -1,15 +1,14 @@
 import java.util.Properties;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 
 public class ConfigManager {
-    private static final String CONFIG_FILE_PATH = "config.properties";
-    private static final Properties configProperties  = new Properties(); //create new properties object
-    private static ConfigManager instance;
+    private static final String CONFIG_FILE_PATH = "C:\\Users\\Administrator\\Documents\\Code\\Projekt_Parkhaus\\Parkhaus\\src\\config.properties";
+    private static volatile ConfigManager instance;
+    private Properties configProperties; //create new properties object
 
     private ConfigManager() {
+        configProperties = new Properties();
         loadProperties(); //call method  to load properties
     }
 
@@ -34,15 +33,26 @@ public class ConfigManager {
     }
 
     //two getters that access configProperties and parse them into their respective data types
-    public static int getIntProperty(String key) {
-        return Integer.parseInt(configProperties.getProperty(key));
+    public int getIntProperty(String key) {
+            return Integer.parseInt(configProperties.getProperty(key));
     }
-    public static boolean getBooleanProperty(String key) {
+
+    public boolean getBooleanProperty(String key) {
+
         return Boolean.parseBoolean(configProperties.getProperty(key));
+
     }
 
     //method to set properties
-    public static void setProperty(String key, String value) {
+    public void setProperty(String key, String value) {
+        synchronized (this) { //synchronize object to cover setting and saving
+            configProperties.setProperty(key, value);
+            saveProperties();
+        }
+    }
+
+    private void saveProperties() {
+
         try (OutputStream output = new FileOutputStream(CONFIG_FILE_PATH)) {
             configProperties.store(output, "Updated configuration");
         } catch (IOException ex) {
@@ -50,3 +60,4 @@ public class ConfigManager {
         }
     }
 }
+

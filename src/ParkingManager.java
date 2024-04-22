@@ -5,13 +5,15 @@ import java.util.Map;
 public class ParkingManager {
 
     private final List<ParkingDeck> decks;
-    private Map<Vehicle, ParkingSpot> vehicleToSpotMap; //track parked vehicles
-    private final int freeSpots = ConfigManager.getIntProperty("numberOfDecks") * ConfigManager.getIntProperty("spotsPerDeck");
+    private final Map<Vehicle, ParkingSpot> vehicleToSpotMap; //track parked vehicles
     private int parkedVehicles;
 
     //method returning free spots
     public int freeSpots() {
-        return (freeSpots - parkedVehicles);
+        ConfigManager configManager = ConfigManager.getInstance();
+        int numberOfDecks = configManager.getIntProperty("numberOfDecks");
+        int spotsPerDeck = configManager.getIntProperty("spotsPerDeck");
+        return (numberOfDecks * spotsPerDeck - parkedVehicles);
     }
 
     public ParkingManager(List<ParkingDeck> decks) {
@@ -41,20 +43,20 @@ public class ParkingManager {
         return false;
     }
 
-    public boolean freeSpot(int deckNumber, int spotNumber) {
-        for (ParkingDeck deck : decks) {
-            if (deck.getDeckNumber() == deckNumber) {
-                for (ParkingSpot spot : deck.getSpots()) {
-                    if (spot.getSpotNumber() == spotNumber && spot.isOccupied()) {
-                        spot.setOccupied(false);
-                        vehicleToSpotMap.values().remove(spot); //clear the vehicle link
-                        return true;
-                    }
-                }
-            }
-        }
-        return false; //return false if no spot was found or the spot was not occupied
-    }
+//    public boolean freeSpot(int deckNumber, int spotNumber) {
+//        for (ParkingDeck deck : decks) {
+//            if (deck.getDeckNumber() == deckNumber) {
+//                for (ParkingSpot spot : deck.getSpots()) {
+//                    if (spot.getSpotNumber() == spotNumber && spot.isOccupied()) {
+//                        spot.setOccupied(false);
+//                        vehicleToSpotMap.values().remove(spot); //clear the vehicle link
+//                        return true;
+//                    }
+//                }
+//            }
+//        }
+//        return false; //return false if no spot was found or the spot was not occupied
+//    }
 
     public ParkingSpot parkVehicle(Vehicle vehicle) {
         ParkingSpot freeSpot = findParkingSpot();
