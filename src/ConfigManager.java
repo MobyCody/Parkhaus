@@ -1,7 +1,6 @@
 import java.util.Properties;
 import java.io.*;
 
-
 public class ConfigManager {
     private static final String CONFIG_FILE_PATH = "C:\\Users\\Administrator\\Documents\\Code\\Projekt_Parkhaus\\Parkhaus\\src\\config.properties";
     private static volatile ConfigManager instance;

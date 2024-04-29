@@ -8,7 +8,7 @@ public class Main {
 
         int numberOfDecks = configManager.getIntProperty("numberOfDecks");
         int spotsPerDeck = configManager.getIntProperty("spotsPerDeck");
-//        boolean twoBikesPerSpot = ConfigManager.getBooleanProperty("twoBikesPerSpot"); //not used yet
+        //boolean twoBikesPerSpot = ConfigManager.getBooleanProperty("twoBikesPerSpot"); //not used yet
 
         //create parking spots and decks
         List<ParkingDeck> decks = new ArrayList<>();

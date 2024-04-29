@@ -5,26 +5,39 @@ import java.util.Map;
 public class ParkingManager {
 
     private final List<ParkingDeck> decks;
-    private final Map<Vehicle, ParkingSpot> vehicleToSpotMap; //track parked vehicles
-    private int parkedVehicles;
-
-    //method returning free spots
-    public int freeSpots() {
-        ConfigManager configManager = ConfigManager.getInstance();
-        int numberOfDecks = configManager.getIntProperty("numberOfDecks");
-        int spotsPerDeck = configManager.getIntProperty("spotsPerDeck");
-        return (numberOfDecks * spotsPerDeck - parkedVehicles);
-    }
+    private final Map<Vehicle, ParkingSpot> vehicleToSpotMap; //initialize map to track parked vehicles
+    private int parkedVehicles; //number of parked Vehicles
 
     public ParkingManager(List<ParkingDeck> decks) {
         this.decks = decks;
         this.vehicleToSpotMap = new HashMap<>();
     }
 
+    //method returning free spots
+    public int freeSpots() {
+        ConfigManager configManager = ConfigManager.getInstance();
+        int numberOfDecks = configManager.getIntProperty("numberOfDecks");
+        int spotsPerDeck = configManager.getIntProperty("spotsPerDeck");
+        int totalSpots = numberOfDecks * spotsPerDeck;
+        return totalSpots - calculateOccupiedSpots();
+    }
+
+    private int calculateOccupiedSpots() {
+        int occupiedSpots = 0;
+        for (ParkingDeck deck : decks) {
+            for (ParkingSpot spot : deck.getSpots()) {
+                if (spot.isFullyOccupied()) {
+                    occupiedSpots ++;
+                }
+            }
+        }
+        return occupiedSpots;
+    }
+
     public ParkingSpot findParkingSpot() {
         for (ParkingDeck deck : decks) {
             for (ParkingSpot spot : deck.getSpots()) {
-                if (!spot.isOccupied()) {
+                if (!spot.isFullyOccupied()) {
                     return spot;
                 }
             }
@@ -32,15 +45,32 @@ public class ParkingManager {
         return null; //returns null if no free spots are available
     }
 
+    public ParkingSpot parkVehicle(Vehicle vehicle) {
+        ParkingSpot freeSpot = findParkingSpot();
+        if (freeSpot != null && freeSpot.parkVehicle(vehicle)) {
+            vehicleToSpotMap.put(vehicle, freeSpot); //track vehicle
+            return freeSpot;
+        }
+        return null;
+    }
+
     public boolean unparkVehicle(Vehicle vehicle) {
         ParkingSpot spot = vehicleToSpotMap.get(vehicle);
-        if (spot != null && spot.isOccupied()) {
-            spot.setOccupied(false);
+        if (spot != null) {
+            spot.removeVehicle(vehicle);
             vehicleToSpotMap.remove(vehicle); //remove vehicle from map
-            parkedVehicles--; //decrement counter for parked vehicle tracking
             return true;
         }
         return false;
+    }
+
+    public ParkingSpot findVehicle(String licensePlate) {
+        for (Map.Entry<Vehicle, ParkingSpot> entry : vehicleToSpotMap.entrySet()) {
+            if (entry.getKey().getLicensePlate().equals(licensePlate)) {
+                return entry.getValue();
+            }
+        }
+        return null; //return null if no vehicle with that license plate is found
     }
 
 //    public boolean freeSpot(int deckNumber, int spotNumber) {
@@ -55,26 +85,6 @@ public class ParkingManager {
 //                }
 //            }
 //        }
-//        return false; //return false if no spot was found or the spot was not occupied
+//        return false; //return false if no spot was found or the spot was not occupie
 //    }
-
-    public ParkingSpot parkVehicle(Vehicle vehicle) {
-        ParkingSpot freeSpot = findParkingSpot();
-        if (freeSpot != null) {
-            freeSpot.setOccupied(true);
-            vehicleToSpotMap.put(vehicle, freeSpot); //track vehicle
-            parkedVehicles++; //increment counter for parked vehicle tracking
-            return freeSpot;
-        }
-        return null;
-    }
-
-    public ParkingSpot findVehicle(String licensePlate) {
-        for (Map.Entry<Vehicle, ParkingSpot> entry : vehicleToSpotMap.entrySet()) {
-            if (entry.getKey().getLicensePlate().equals(licensePlate)) {
-                return entry.getValue();
-            }
-        }
-        return null; //return null if no vehicle with that license plate is found
-    }
 }

@@ -1,6 +1,7 @@
-public class Vehicle {
+public abstract class Vehicle {
     private final String licensePlate;
 
+    //constructor
     public Vehicle(String licensePlate) {
         this.licensePlate = licensePlate;
     }
@@ -8,6 +9,8 @@ public class Vehicle {
     public String getLicensePlate() {
         return licensePlate;
     }
+
+    public abstract double spaceRequired();
 
     @Override
     public boolean equals(Object obj) {

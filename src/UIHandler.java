@@ -1,12 +1,12 @@
 import java.util.Scanner;
 
 public class UIHandler {
-    private static UIHandler instance;
-    private static ParkingManager parkingManager;
+    private static volatile UIHandler instance;
+    private ParkingManager parkingManager;
     private final Scanner scanner;
 
     public UIHandler(ParkingManager parkingManager) {
-        UIHandler.parkingManager = parkingManager;
+        this.parkingManager = parkingManager;
         this.scanner = new Scanner(System.in);
     }
 
@@ -23,7 +23,6 @@ public class UIHandler {
 
     private void pressEnter() {
         System.out.println("Press Enter key to continue...");
-        scanner.nextLine();
         scanner.nextLine();
     }
 
@@ -52,62 +51,81 @@ public class UIHandler {
                 System.exit(0);
                 break;
             case 1:
-                System.out.println("Please enter your vehicle's license plate:");
-                String plate = scanner.next();
-                Vehicle vehicle = new Vehicle(plate);
-                if (parkingManager.findVehicle(plate) == null) { //check if vehicle is already in map
-                    ParkingSpot spot = parkingManager.parkVehicle(vehicle);
-                    if (spot != null) {
-                        System.out.println("Your vehicle has been parked in Spot " + spot.getSpotNumber() +
-                                " on Deck " + spot.getDeckNumber());
-                        pressEnter();
-                    } else {
-                        System.out.println("Sorry, no spots available.");
-                        pressEnter();
-                    }
-                } else {
-                    System.out.println("This vehicle is already parked.");
-                    pressEnter();
-                }
+                handleParkVehicle();
                 break;
             case 2:
-                System.out.println("Please enter your vehicle's license plate to find it:");
-                String findPlate = scanner.next();
-                ParkingSpot foundSpot = parkingManager.findVehicle(findPlate);
-                if (foundSpot != null) {
-                    System.out.println("Your vehicle is located at: Deck " + foundSpot.getDeckNumber() +
-                            " in Spot " + foundSpot.getSpotNumber());
-                    pressEnter();
-                } else {
-                    System.out.println("Vehicle not found.");
-                    pressEnter();
-                }
+                handleFindVehicle();
                 break;
             case 3:
-                System.out.println("Please enter your vehicle's license plate to check out:");
-                String checkoutPlate = scanner.next();
-                if (parkingManager.unparkVehicle(new Vehicle(checkoutPlate))) {
-                    System.out.println("Thank you for visiting, your vehicle has been checked out.");
-                    pressEnter();
-                } else {
-                    System.out.println("Vehicle check out failed or vehicle not found.");
-                    pressEnter();
-                }
+                handleCheckoutVehicle();
                 break;
             case 4:
-                System.out.println("There are " + parkingManager.freeSpots() + " free parking spots.");
-                pressEnter();
+                handleCountFreeSpots();
                 break;
             case 5:
-                scanner.nextLine();
-                System.out.println("How many decks does the garage have?");
-                String decks = scanner.nextLine();
-                ConfigManager.getInstance().setProperty("numberOfDecks", decks);
-                System.out.println("How many spots per deck?");
-                String spots = scanner.nextLine();
-                ConfigManager.getInstance().setProperty("spotsPerDeck", spots);
+                handleSetUp();
                 break;
         }
+    }
+
+    private void handleParkVehicle() {
+        System.out.println("Please enter your vehicle's license plate:");
+        String plate = scanner.next();
+        Vehicle vehicle = new Car(plate);
+        if (parkingManager.findVehicle(plate) == null) { //check if vehicle is already in map
+            ParkingSpot spot = parkingManager.parkVehicle(vehicle);
+            if (spot != null) {
+                System.out.println("Your vehicle has been parked in Spot " + spot.getSpotNumber() +
+                        " on Deck " + spot.getDeckNumber());
+                pressEnter();
+            } else {
+                System.out.println("Sorry, no spots available.");
+                pressEnter();
+            }
+        } else {
+            System.out.println("This vehicle is already parked.");
+            pressEnter();
+        }
+    }
+
+    private void handleFindVehicle() {
+        System.out.println("Please enter your vehicle's license plate to find it:");
+        String findPlate = scanner.next();
+        ParkingSpot foundSpot = parkingManager.findVehicle(findPlate);
+        if (foundSpot != null) {
+            System.out.println("Your vehicle is located at: Deck " + foundSpot.getDeckNumber() +
+                    " in Spot " + foundSpot.getSpotNumber());
+            pressEnter();
+        } else {
+            System.out.println("Vehicle not found.");
+            pressEnter();
+        }
+    }
+
+    private void handleCheckoutVehicle() {
+        System.out.println("Please enter your vehicle's license plate to check out:");
+        String checkoutPlate = scanner.next();
+        if (parkingManager.unparkVehicle(new Car(checkoutPlate))) {
+            System.out.println("Thank you for visiting, your vehicle has been checked out.");
+            pressEnter();
+        } else {
+            System.out.println("Vehicle check out failed or vehicle not found.");
+            pressEnter();
+        }
+    }
+
+    private void handleCountFreeSpots() {
+        System.out.println("There are " + parkingManager.freeSpots() + " free parking spots.");
+        pressEnter();
+    }
+
+    private void handleSetUp() {
+        System.out.println("How many decks does the garage have?");
+        String decks = scanner.nextLine();
+        ConfigManager.getInstance().setProperty("numberOfDecks", decks);
+        System.out.println("How many spots per deck?");
+        String spots = scanner.nextLine();
+        ConfigManager.getInstance().setProperty("spotsPerDeck", spots);
     }
 
 //    public void closeScanner() {
